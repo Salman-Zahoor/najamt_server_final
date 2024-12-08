@@ -2,6 +2,9 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
 const Admin = require("../model/admin");
+const Employee = require("../model/employee");
+const Services = require("../model/services");
+const Bookings = require("../model/bookings");
 const jwt = require("jsonwebtoken");
 const JWT_SECRET =
   "7287sjhjh8hjshjhjshh76@@@#452454525454fgfDF##$#@#45443453fdfdrE#434SwwwW$@#@#$#@%@%$%@$@%@^&hgHG77gy767yty";
@@ -121,6 +124,44 @@ router.post("/changePasswordAdmin", async (req, res) => {
     });
   }
 });
+
+router.get("/adminDashboard", async (req, res) => {
+    try {
+      let allEmployee = await Employee.find();
+      let allServices = await Services.find();
+      let allBookings = await Bookings.find();
+    
+
+      const bokingsChart = await Bookings.aggregate([
+        {
+          $group: {
+            _id: {
+              $dateToString: {
+                date: { $dateFromString: { dateString: "$date" } },
+                format: "%m",
+              },
+            },
+            numberofbookings: { $sum: 1 },
+          },
+        },
+      ]);
+      let params = {
+        allEmployee: allEmployee?.length,
+        allServices: allServices?.length,
+        allBookings: allBookings?.length,
+        bokingsChartData: bokingsChart,
+      };
+      res.status(200).send({
+        data: params,
+        status: "ok",
+      });
+    } catch (error) {
+      console.log(error, "ERRRRRRRRRRRRRR");
+      res.status(400).send({
+        status: "error",
+      });
+  }}
+);
 
 
 module.exports = router;
