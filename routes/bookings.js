@@ -385,4 +385,44 @@ router.put("/updateBooking/:id", verifyToken, async (req, res) => {
   }
 });
 
+router.post("/contactUs", async (req, res) => {
+  const { firstName, lastName, email, phone, message } = req.body;
+
+  try {
+    // Prepare the email content
+    const emailSubject = "Contact Us Message";
+    const emailBody = `Dear Team,\n\nYou have received a new message from:\n\nFirst Name: ${firstName}\nLast Name: ${lastName}\nEmail: ${email}\nPhone: ${phone}\n\nMessage:\n${message}\n\nPlease respond to the query at your earliest convenience.`;
+
+    // Create the transport for sending email
+    const transporter = nodemailer.createTransport({
+      service: "gmail", // Email service provider
+      auth: {
+        user: "Jobia4801@gmail.com",
+        pass: "grhtvruaqsucqcsz",
+        },
+    });
+
+    // Send the email
+    await transporter.sendMail({
+      from: email, // sender's email from the request
+      to: "najamtalhuda@gmail.com", // recipient email
+      subject: emailSubject, // Subject line
+      text: emailBody, // plain text body
+    });
+
+    // Respond back to the client
+    res.status(200).send({
+      status: "ok",
+      message: "Message sent successfully!",
+    });
+  } catch (error) {
+    console.error("Error: ", error);
+    res.status(400).send({
+      status: "error",
+      message: "Something went wrong. Please try again later.",
+    });
+  }
+});
+
+
 module.exports = router;
