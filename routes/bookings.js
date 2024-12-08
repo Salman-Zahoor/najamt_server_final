@@ -344,7 +344,7 @@ router.put("/updateBooking/:id", verifyToken, async (req, res) => {
     });
 
     // Check status and prepare email content
-    if (req.body.status === "confirmed" || req.body.status === "cancelled") {
+    if (req.body.status === "confirm" || req.body.status === "cancel") {
       const transporter = nodemailer.createTransport({
         service: "gmail", // or your email service provider
         auth: {
