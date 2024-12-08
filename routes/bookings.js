@@ -356,9 +356,9 @@ router.put("/updateBooking/:id", verifyToken, async (req, res) => {
       let emailSubject = "Booking Update";
       let emailBody = `Dear ${name},\n\n`;
 
-      if (req.body.status === "confirmed") {
+      if (req.body.status === "confirm") {
         emailBody += `Your booking with ID ${bookingId} has been confirmed.\n\nThank you for choosing our service!`;
-      } else if (req.body.status === "cancelled") {
+      } else if (req.body.status === "cancel") {
         emailBody += `We regret to inform you that your booking with ID ${bookingId} has been cancelled.\n\nIf you have any questions, feel free to contact our support team.`;
       }
 
